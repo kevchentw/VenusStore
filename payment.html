@@ -14,13 +14,60 @@
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/customjs.js"></script>
+	<style>
+		/* CSS for Credit Card Payment form */
+
+		.credit-card-box .panel-title {
+			display: inline;
+			font-weight: bold;
+		}
+
+		.credit-card-box .form-control.error {
+			border-color: red;
+			outline: 0;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+		}
+
+		.credit-card-box label.error {
+			font-weight: bold;
+			color: red;
+			padding: 2px 8px;
+			margin-top: 2px;
+		}
+
+		.credit-card-box .payment-errors {
+			font-weight: bold;
+			color: red;
+			padding: 2px 8px;
+			margin-top: 2px;
+		}
+
+		.credit-card-box label {
+			display: block;
+		}
+		/* The old "center div vertically" hack */
+
+		.credit-card-box .display-table {
+			display: table;
+		}
+
+		.credit-card-box .display-tr {
+			display: table-row;
+		}
+
+		.credit-card-box .display-td {
+			display: table-cell;
+			vertical-align: middle;
+			width: 50%;
+		}
+	</style>
 </head>
 
 <body>
 
 	<nav class="navbar">
 		<div class="container">
-			<a class="navbar-brand" href="#">Your online store</a>
+			<a class="navbar-brand" href="#">Venus Store</a>
 			<div class="navbar-right">
 				<div class="container minicart"></div>
 			</div>
@@ -34,130 +81,190 @@
 			<li class="active"><a href="#">Payment</a></li>
 		</ol>
 	</div>
-
-	<div class="container text-center">
-		4410 2154 3921 7629, 05 / 21, 074
-		<form action="">
-			<span>$40000 TWD</span>
-			<input placeholder="Card number" type="text" name="number" id="number">
-			<input placeholder="Full name" type="text" name="name" id="name">
-			<input placeholder="MM/YY" type="text" name="expiry" id="expiry">
-			<input placeholder="CVC" type="text" name="cvc" id="cvc">
-		</form>
-		<button id="pay">結帳</button>
-		<br>
-		<br>
-		<br>
-		<br>
-		<div class="card-wrapper">
+	<div class="container" id="venus">
+		<div class="row" style="background-color: #f2f6f9;">
+			<!-- You can make it whatever width you want. I'm making it full width
+             on <= small devices and 4/12 page width on >= medium devices -->
+			<div class="col-xs-12 col-md-4">
+				<!-- CREDIT CARD FORM STARTS HERE -->
+				<div class="panel panel-default credit-card-box">
+					<div class="panel-heading display-table">
+						<div class="row display-tr" style="background-color: #f2f6f9;">
+							<h3 class="panel-title display-td">Payment Details</h3>
+							<div class="display-td">
+								<img class="img-responsive pull-right" src="http://i76.imgup.net/accepted_c22e0.png">
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<form role="form" id="payment-form" method="POST" action="javascript:void(0);">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group">
+										<label for="name">Full Name</label>
+										<input type="text" class="form-control" placeholder="Full name" id="name" name="name" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group">
+										<label for="cardNumber">CARD NUMBER</label>
+										<div class="input-group">
+											<input type="tel" class="form-control" name="number" id="number" placeholder="Valid Card Number" autocomplete="cc-number" required autofocus />
+											<span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-7 col-md-7">
+									<div class="form-group">
+										<label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+										<input type="tel" class="form-control" name="expiry" id="expiry" placeholder="MM / YY" autocomplete="cc-exp" required />
+									</div>
+								</div>
+								<div class="col-xs-5 col-md-5 pull-right">
+									<div class="form-group">
+										<label for="cardCVC">CV CODE</label>
+										<input type="tel" class="form-control"  name="cvc" id="cvc" placeholder="CVC" autocomplete="cc-csc" required />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group">
+										<label for="couponCode">COUPON CODE</label>
+										<input type="text" class="form-control" name="couponCode" />
+									</div>
+								</div>
+							</div>
+							<div clss="row">
+								<div class="col-xs-12" style="padding:30px; color:#f06953; font-size:30px">
+									Total: $40000 TWD
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<button class="subscribe btn btn-success btn-lg btn-block" id="pay" type="button">Buy</button>
+								</div>
+							</div>
+							<div class="row" style="display:none;">
+								<div class="col-xs-12">
+									<p class="payment-errors"></p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-8">
+				<div class="card-wrapper" style="padding-top:100px">
+				</div>
+			</div>
 		</div>
-	</div>
-	<br>
-	<br>
-	<br>
+				<!-- CREDIT CARD FORM ENDS HERE -->
+				<script>
+					$("#pay").click(function() {
+						var form = new FormData();
+						form.append("number", $("#number").val().replace(/ /g, ''));
+						form.append("csc", $("#cvc").val());
+						form.append("expire_month", $("#expiry").val().substring(0, 2));
+						form.append("expire_year", $("#expiry").val().substring(5, 7));
+						form.append("shop_id", "83627");
+						form.append("total", "1");
+						form.append("description", "venus");
 
-	<script>
-		$("#pay").click(function(){
-			var form = new FormData();
-			form.append("number", $("#number").val().replace(/ /g, ''));
-			form.append("csc", $("#cvc").val());
-			form.append("expire_month", $("#expiry").val().substring(0,2));
-			form.append("expire_year", $("#expiry").val().substring(5,7));
-			form.append("shop_id", "83627");
-			form.append("total", "1");
-			form.append("description", "venus");
+						var settings = {
+							"async": true,
+							"crossDomain": true,
+							"url": "http://140.113.89.233:3019/api/payments/?token=VENUS%40123123j2d23d5j31%40d12ddDdqw2d3d32dd1d",
+							"method": "POST",
+							"processData": false,
+							"contentType": false,
+							"mimeType": "multipart/form-data",
+							"data": form
+						}
 
-			var settings = {
-				"async": true,
-				"crossDomain": true,
-				"url": "http://140.113.89.233:3019/api/payments/?token=VENUS%40123123j2d23d5j31%40d12ddDdqw2d3d32dd1d",
-				"method": "POST",
-				"processData": false,
-				"contentType": false,
-				"mimeType": "multipart/form-data",
-				"data": form
-			}
+						$.ajax(settings).done(function(response) {
+							res = JSON.parse(response);
+							swal({
+								title: "Verify",
+								text: "Please insert the 6-digits verify code from your phone",
+								type: "input",
+								showCancelButton: true,
+								closeOnConfirm: false,
+								animation: "slide-from-top",
+								inputPlaceholder: "Verify Code"
+							}, function(inputValue) {
+								if (inputValue === false)
+									return false;
+								var form = new FormData();
+								form.append("code", inputValue);
+								var settings = {
+									"async": true,
+									"crossDomain": true,
+									"url": "http://140.113.89.233:3019/api/payments/" + res.msg.id.toString() + "/?token=VENUS%40123123j2d23d5j31%40d12ddDdqw2d3d32dd1d",
+									"method": "POST",
+									"processData": false,
+									"contentType": false,
+									"mimeType": "multipart/form-data",
+									"data": form,
+									"error": function(e) {
+										console.log("error");
+										swal.showInputError("Verify Failed!");
+										return false;
+									},
+									"success": function(e) {
+										swal("Nice!", "Thank you!");
+										console.log("success");
+									}
+								}
+								$.ajax(settings).success(function(r) {
+									console.log(r);
+								});
+							});
+						});
+					})
+				</script>
+				<script>
+					var card = new Card({
+						// a selector or DOM element for the form where users will
+						// be entering their information
+						form: 'form', // *required*
+						// a selector or DOM element for the container
+						// where you want the card to appear
+						container: '.card-wrapper', // *required*
 
-			$.ajax(settings).done(function(response) {
-				res = JSON.parse(response);
-				swal({
-					title: "Verify",
-					text: "Please insert the 6-digits verify code from your phone",
-					type: "input",
-					showCancelButton: true,
-					closeOnConfirm: false,
-					animation: "slide-from-top",
-					inputPlaceholder: "Verify Code"
-				}, function(inputValue){
-					if (inputValue === false)
-					return false;
-					var form = new FormData();
-					form.append("code", inputValue);
-					var settings = {
-					  "async": true,
-					  "crossDomain": true,
-					  "url": "http://140.113.89.233:3019/api/payments/"+ res.msg.id.toString() +"/?token=VENUS%40123123j2d23d5j31%40d12ddDdqw2d3d32dd1d",
-					  "method": "POST",
-					  "processData": false,
-					  "contentType": false,
-					  "mimeType": "multipart/form-data",
-					  "data": form,
-					  "error": function(e){
-						  console.log("error");
-						  swal.showInputError("Verify Failed!");
-						  return false;
-					  },
-					  "success": function(e){
-						  swal("Nice!", "Thank you!");
-						  console.log("success");
-					  }
-					}
-					$.ajax(settings).success(function (r) {
-					  console.log(r);
+						width: 350, // optional — default 350px
+						formatting: true, // optional - default true
+
+						// Strings for translation - optional
+						messages: {
+							validDate: 'valid\ndate', // optional - default 'valid\nthru'
+							monthYear: 'mm/yyyy', // optional - default 'month/year'
+						},
+
+						// Default placeholders for rendered fields - optional
+						placeholders: {
+							number: '•••• •••• •••• ••••',
+							name: 'Full Name',
+							expiry: '••/••',
+							cvc: '•••'
+						},
+
+						// if true, will log helpful messages for setting up Card
+						debug: false // optional - default false
 					});
-				});
-			});
-		})
+				</script>
+				<!-- The popover content -->
 
-	</script>
-	<script>
-		var card = new Card({
-			// a selector or DOM element for the form where users will
-			// be entering their information
-			form: 'form', // *required*
-			// a selector or DOM element for the container
-			// where you want the card to appear
-			container: '.card-wrapper', // *required*
+				<div id="popover" style="display: none">
+					<a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="#"><span class="glyphicon glyphicon-remove"></span></a>
+				</div>
 
-			width: 500, // optional — default 350px
-			formatting: true, // optional - default true
-
-			// Strings for translation - optional
-			messages: {
-				validDate: 'valid\ndate', // optional - default 'valid\nthru'
-				monthYear: 'mm/yyyy', // optional - default 'month/year'
-			},
-
-			// Default placeholders for rendered fields - optional
-			placeholders: {
-				number: '•••• •••• •••• ••••',
-				name: 'Full Name',
-				expiry: '••/••',
-				cvc: '•••'
-			},
-
-			// if true, will log helpful messages for setting up Card
-			debug: false // optional - default false
-		});
-	</script>
-	<!-- The popover content -->
-
-	<div id="popover" style="display: none">
-		<a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-		<a href="#"><span class="glyphicon glyphicon-remove"></span></a>
-	</div>
-
-	<!-- JavaScript includes -->
+				<!-- JavaScript includes -->
 
 
 </body>
